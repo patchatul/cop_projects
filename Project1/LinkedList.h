@@ -46,7 +46,7 @@ public:
         }
     }
 
-    // Find an item using its name
+    //Find an item using its name
     Node<T>* findByName(string name) const {
 
         Node<T>* current = head;
