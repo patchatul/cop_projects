@@ -7,7 +7,7 @@ A normal signly linked list for Boba menu list.
 
 #include <iostream>
 #include "Node.h"
-
+#include <cctype>
 using namespace std;
 
 template <typename T>
@@ -44,6 +44,39 @@ public:
             current->data.display();
             current = current->next;
         }
+    }
+
+    // Find an item using its name
+    Node<T>* findByName(string name) const {
+
+        Node<T>* current = head;
+        //Traverse the linked list
+
+        while (current != nullptr){
+
+            //save both values in a string to be converted to lowercase as case doesnt matter but spelling does 
+            string menuName = current -> data.getName();
+            string userInputName = name;
+
+            for(char &c : menuName){
+                c = tolower(c);
+            }
+            for(char &c : userInputName){
+                c = tolower(c);
+            }
+
+            //now compare both to check if the user input value is on the menu
+            if(menuName == userInputName){
+                return current;
+            }
+
+            //move on to the next one if not found yet
+            current = current -> next;
+
+
+        }
+
+        return nullptr;// Item was not found
     }
 };
 

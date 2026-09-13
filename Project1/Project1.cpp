@@ -6,6 +6,7 @@ Our project is about implementing a circularly linked list in Boba drink order.
 #include <iostream>
 #include <string>
 #include <iomanip>
+#include <vector>
 #include "CircularLinkedList.h"
 #include "LinkedList.h"
 using namespace std;
@@ -76,6 +77,79 @@ void printAddonMenu(const CircularLinkedList<Addon> & addonMenu) {
 };
 
 
+//Order class- this is used to store what the user orders so that the final reciept can be printed out
+
+class Order{
+    private:
+        //this will store the drink name and any modifications
+        vector <string> itemsOrdered;
+
+        //this will store the price of each thing that was ordered
+        vector <double> prices;
+
+        //this will store the final price of the users drink
+        double finalPrice;
+
+    public: 
+        //Constructor
+        Order(){
+            finalPrice = 0.0;
+        }
+
+        void addDrink(const LinkedList<BobaDrink> & bobaMenu){
+
+            //Get the users choice of boba drink
+            string bobaName;
+
+            cout << "Enter the name of your drink: ";
+
+            getline(cin, bobaName);
+
+            //Check that the user entered the correct name for their drink
+            Node <BobaDrink>* drink = bobaMenu.findByName(bobaName);
+
+            //Loop if a nullptr is returned until the correct name is entered
+            while (drink == nullptr){
+                cout << "You have entered an invalid option. Please entere a drink from the menu: ";
+
+                getline(cin, bobaName);
+
+                //Check that the user entered the correct name for their drink
+                drink = bobaMenu.findByName(bobaName);
+            }
+
+            //Save the order name and prices in the vectors
+            itemsOrdered.push_back(drink -> data.getName());
+            prices.push_back(drink -> data.getPrice());
+
+            //add the price to the final price
+            finalPrice += drink->data.getPrice();
+        }
+
+
+        //print the reciept of the users
+        void printReciept() const{
+            cout << endl;
+            cout << "========= RECIEPT =========" <<endl;
+
+            //loop through the items ordered to print them out 
+            // the size of itemsOrdered is the same size of prices
+            for(int i = 0; i < itemsOrdered.size(); i++){
+
+                //print the price to have a fixed number of only 2 decimals 
+                cout << itemsOrdered[i] << " - $" << fixed <<setprecision(2) << prices[i] <<endl;
+            }
+
+            cout << "===========================" <<endl;
+
+            cout<< "Total $: " << fixed <<setprecision(2) << finalPrice <<endl;
+
+            cout << "===========================" <<endl;
+
+
+        }
+
+};
 
 
 // main function to run the program
@@ -105,8 +179,22 @@ int main(){
     cout << "Welcome to the Boba Cafe! Make Your Boba Order!" << endl;
     //print the singly linked lists of Boba menu
     printBobaMenu(bobaMenu);
+    cout << endl;
+
+    //Create the user order object 
+    Order order;
+
+    //get their drink order
+    order.addDrink(bobaMenu);
+    
+    cout << endl;
+
     //print the circularly linked lists of add-ons to the boba order
     printAddonMenu(addonMenu);
+
+
+    //print out the final reciept
+    order.printReciept();
 
     return 0;
 }

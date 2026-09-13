@@ -84,10 +84,25 @@ public:
         Node<T>* current = head;
         //Traverse the circular list
         do {
+
+            //save both values in a string to be converted to lowercase as case doesnt matter but spelling does 
+            string modMenu = current -> data.getName();
+            string userInputName = name;
+
+            for(char &c : modMenu){
+                c = tolower(c);
+            }
+            for(char &c : userInputName){
+                c = tolower(c);
+            }
+
+
             // Compare current item's name
-            if (current->data.getName() == name) {
+            if (modMenu == userInputName) {
                 return current;
             }
+
+
             current = current->next;
         } while (current != head);
         return nullptr;// Item was not found
