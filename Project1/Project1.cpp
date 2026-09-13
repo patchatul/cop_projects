@@ -132,8 +132,8 @@ class Order{
             cout << endl;
             cout << "========= RECIEPT =========" <<endl;
 
-            //loop through the items ordered to print them out 
-            // the size of itemsOrdered is the same size of prices
+            //Loop through the items ordered to print them out 
+            //The size of itemsOrdered is the same size of prices
             for(int i = 0; i < itemsOrdered.size(); i++){
 
                 //print the price to have a fixed number of only 2 decimals 

@@ -85,7 +85,7 @@ public:
         //Traverse the circular list
         do {
 
-            //save both values in a string to be converted to lowercase as case doesnt matter but spelling does 
+            //Save both values in a string to be converted to lowercase as case doesnt matter but spelling does 
             string modMenu = current -> data.getName();
             string userInputName = name;
 
