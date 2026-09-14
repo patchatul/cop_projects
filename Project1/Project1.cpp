@@ -92,6 +92,9 @@ class Order{
         //this will store the final price of the users drink
         double finalPrice;
 
+        // This is theuser specific add-on list for this order
+        CircularLinkedList<Addon> userAddons;
+
     public: 
         //Constructor
         Order(){
@@ -128,6 +131,39 @@ class Order{
             finalPrice += drink->data.getPrice();
         }
 
+        // Function to apply add-on modifications to user order
+        void applyModification(const CircularLinkedList<Addon>& addonMenu) {
+
+            string addonName; // Hold user input 'add-on' name
+
+            cout << "Would you like to add an add-on? (yes/no): "; // Ask use if they want add-on
+            string answer;
+            getline(cin, answer);
+            // Check if the user does not want add-ons, leave function
+            if(answer == "no" || answer == "No" || answer == "NO" || answer == "None") {
+                return;
+            } 
+
+            cout<<"Enter an add-on: "; // Ask user to eneter add-on name
+            getline(cin, addonName);
+
+            Node<Addon>* selectAddon = addonMenu.findByName(addonName); // Stores a pointer to node containg the slecetd add-on
+
+            while(selectAddon == nullptr) {
+                cout << "Invlaid add-on. Try agian: ";
+                getline(cin, addonName); // Prompt user to re-enter name
+                selectAddon = addonMenu.findByName(addonName);
+            }
+
+            // Add the chosen add-on to this users's custom order list
+            userAddons.add(Addon(selectAddon->data.getName(), selectAddon->data.getPrice()));
+
+            // Update and save it to recipt
+            itemsOrdered.push_back(selectAddon->data.getName());
+            prices.push_back(selectAddon->data.getPrice());
+            finalPrice += selectAddon->data.getPrice();
+
+        }
 
         //print the reciept of the users
         void printReciept() const{
@@ -195,6 +231,10 @@ int main(){
     //print the circularly linked lists of add-ons to the boba order
     printAddonMenu(addonMenu);
 
+    // Ask user if add-ons wants to be applied to order
+    order.applyModification(addonMenu);
+    
+    cout << endl;
 
     //print out the final reciept
     order.printReciept();
