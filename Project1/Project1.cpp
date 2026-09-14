@@ -71,6 +71,8 @@ void printBobaMenu(const LinkedList<BobaDrink> & bobaMenu) {
     bobaMenu.display();
     cout << "===========================" <<endl;
 };
+
+
 //print add-on on that boba drink order
 void printAddonMenu(const CircularLinkedList<Addon> & addonMenu) {
     cout << "====== ADD-ONS MENU =======" << endl;
@@ -79,28 +81,49 @@ void printAddonMenu(const CircularLinkedList<Addon> & addonMenu) {
 };
 
 
-//Order class- this is used to store what the user orders so that the final reciept can be printed out
 
+//UserReceipt class: this is the users reciept for the data of the items name and price to be stored 
+
+class UserReceipt{
+    private:
+    string itemName;
+    double price;
+
+    public:
+
+    //constructor
+    UserReceipt(string userItem, double userPrice){
+        itemName = userItem;
+        price = userPrice;
+    }
+
+    void display(){
+        cout << std::left << setw(20) << itemName << " $" << fixed <<setprecision(2) << price <<endl;
+    }
+};
+
+
+//Order class: this is used to store what the user orders so that the final reciept can be printed out
 class Order{
     private:
-        //this will store the drink name and any modifications
-        vector <string> itemsOrdered;
 
-        //this will store the price of each thing that was ordered
-        vector <double> prices;
+        //this will be the users receipt (receipt is a linkedlist)
+        LinkedList<UserReceipt> receipt;
 
-        //this will store the final price of the users drink
+
+        //this will store the final price of the users drink after modifications are added
         double finalPrice;
 
-        // This is theuser specific add-on list for this order
-        CircularLinkedList<Addon> userAddons;
 
     public: 
+
         //Constructor
         Order(){
             finalPrice = 0.0;
         }
 
+
+        //This method is to ask the user for the drink name and add to their receipt and the price to finalPrice
         void addDrink(const LinkedList<BobaDrink> & bobaMenu){
 
             //Get the users choice of boba drink
@@ -110,10 +133,12 @@ class Order{
 
             getline(cin, bobaName);
 
+
+
             //Check that the user entered the correct name for their drink
             Node <BobaDrink>* drink = bobaMenu.findByName(bobaName);
 
-            //Loop if a nullptr is returned until the correct name is entered
+            //Loop if a nullptr (meaning drink name was not found) is returned until the correct name is entered
             while (drink == nullptr){
                 cout << "You have entered an invalid option. Please enter a drink from the menu: ";
 
@@ -123,60 +148,76 @@ class Order{
                 drink = bobaMenu.findByName(bobaName);
             }
 
-            //Save the order name and prices in the vectors
-            itemsOrdered.push_back(drink -> data.getName());
-            prices.push_back(drink -> data.getPrice());
+            //Save the order name and price to the receipt by adding to the linked list
+            receipt.add(UserReceipt(drink->data.getName(), drink->data.getPrice()));
 
             //add the price to the final price
             finalPrice += drink->data.getPrice();
         }
 
+
         // Function to apply add-on modifications to user order
         void applyModification(const CircularLinkedList<Addon>& addonMenu) {
 
             string addonName; // Hold user input 'add-on' name
+            string answer; // Hold user input for if they want to have add-ons or not
 
-            cout << "Would you like to add an add-on? (yes/no): "; // Ask use if they want add-on
-            string answer;
-            getline(cin, answer);
-            // Check if the user does not want add-ons, leave function
-            if(answer == "no" || answer == "No" || answer == "NO" || answer == "None") {
-                return;
-            } 
+            do{
 
-            cout<<"Enter an add-on: "; // Ask user to eneter add-on name
-            getline(cin, addonName);
+                cout << "Would you like to add an add-on? (yes/no): "; // Ask use if they want add-on
+                getline(cin, answer);
 
-            Node<Addon>* selectAddon = addonMenu.findByName(addonName); // Stores a pointer to node containg the slecetd add-on
+                //Convert answer to lowercase as the case does not matter
+                for(char &c : answer){
+                    c = tolower(c);
+                }
+                
+                // If the user inputs any answer that is not yes or no keep asking 
+                while(answer != "yes" && answer != "no"){
+                    cout << "Please enter yes or no only: ";
+                    getline(cin, answer);
 
-            while(selectAddon == nullptr) {
-                cout << "Invlaid add-on. Try agian: ";
-                getline(cin, addonName); // Prompt user to re-enter name
-                selectAddon = addonMenu.findByName(addonName);
-            }
+                    for(char &c : answer){
+                        c = tolower(c);
+                    }
+                }
 
-            // Add the chosen add-on to this users's custom order list
-            userAddons.add(Addon(selectAddon->data.getName(), selectAddon->data.getPrice()));
+                // If the user inputs no, there will be no add-ons added
+                if(answer == "no") {
+                    break;
+                }
+                
 
-            // Update and save it to recipt
-            itemsOrdered.push_back(selectAddon->data.getName());
-            prices.push_back(selectAddon->data.getPrice());
-            finalPrice += selectAddon->data.getPrice();
+                cout<<"Enter an add-on: "; // Ask user to eneter add-on name
+                getline(cin, addonName);
 
+                Node<Addon>* selectAddon = addonMenu.findByName(addonName); // Stores a pointer to node containg the selected add-on
+
+                //Loop if a nullptr (meaning add-on name was not found) is returned until the correct name is entered
+                while(selectAddon == nullptr) {
+                    cout << "Invalid add-on. Try again: ";
+                    getline(cin, addonName); // Prompt user to re-enter name
+                    selectAddon = addonMenu.findByName(addonName);
+                }
+
+
+                //Save the add-on name and price to the receipt by adding to the linked list
+                receipt.add(UserReceipt(selectAddon->data.getName(), selectAddon->data.getPrice()));
+
+
+                //add the price to the final price
+                finalPrice += selectAddon->data.getPrice();
+
+            }while(answer == "yes");
         }
 
-        //print the reciept of the users
-        void printReciept() const{
+
+        //Print the reciept of the users
+        void printReceipt() const{
             cout << endl;
             cout << "========= RECIEPT =========" <<endl;
 
-            //Loop through the items ordered to print them out 
-            //The size of itemsOrdered is the same size of prices
-            for(int i = 0; i < itemsOrdered.size(); i++){
-
-                //print the price to have a fixed number of only 2 decimals 
-                cout << std::left << setw(20) << itemsOrdered[i] << " $" << fixed <<setprecision(2) << prices[i] <<endl;
-            }
+            receipt.display();
 
             cout << "===========================" <<endl;
 
@@ -216,6 +257,9 @@ int main(){
     cout << "===============================================" <<endl;
     cout << "Welcome to the Boba Cafe! Make Your Boba Order!" << endl;
     cout << "===============================================" <<endl;
+
+
+
     //print the singly linked lists of Boba menu
     printBobaMenu(bobaMenu);
     cout << endl;
@@ -231,13 +275,15 @@ int main(){
     //print the circularly linked lists of add-ons to the boba order
     printAddonMenu(addonMenu);
 
+    cout << endl;
+
     // Ask user if add-ons wants to be applied to order
     order.applyModification(addonMenu);
     
     cout << endl;
 
-    //print out the final reciept
-    order.printReciept();
+    //print out the final receipt
+    order.printReceipt();
 
     return 0;
 }
