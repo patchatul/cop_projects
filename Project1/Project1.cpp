@@ -39,7 +39,7 @@ class BobaDrink {
         }
         //getter for printing the boba drink
         void display(){
-            cout << name << ", $" << fixed << setprecision(2)<< price << endl;
+            cout << std::left << setw(20) << name << " $" << fixed << setprecision(2)<< price << endl;
         }
 };
 
@@ -60,20 +60,22 @@ class Addon{
             return price;
         }
         void display(){
-            cout << name << ", $" << price << endl;
+            cout << std::left << setw(20) << name << " $" << fixed << setprecision(2)<< price << endl;
         }
 
 };
 
 //print boba drink menu list
 void printBobaMenu(const LinkedList<BobaDrink> & bobaMenu) {
-    cout << "BOBA MENU" << endl;
+    cout << "======== BOBA MENU ========" << endl;
     bobaMenu.display();
+    cout << "===========================" <<endl;
 };
 //print add-on on that boba drink order
 void printAddonMenu(const CircularLinkedList<Addon> & addonMenu) {
-    cout << "ADD-ONS" << endl;
+    cout << "====== ADD-ONS MENU =======" << endl;
     addonMenu.display();
+    cout << "===========================" <<endl;
 };
 
 
@@ -110,7 +112,7 @@ class Order{
 
             //Loop if a nullptr is returned until the correct name is entered
             while (drink == nullptr){
-                cout << "You have entered an invalid option. Please entere a drink from the menu: ";
+                cout << "You have entered an invalid option. Please enter a drink from the menu: ";
 
                 getline(cin, bobaName);
 
@@ -137,16 +139,14 @@ class Order{
             for(int i = 0; i < itemsOrdered.size(); i++){
 
                 //print the price to have a fixed number of only 2 decimals 
-                cout << itemsOrdered[i] << " - $" << fixed <<setprecision(2) << prices[i] <<endl;
+                cout << std::left << setw(20) << itemsOrdered[i] << " $" << fixed <<setprecision(2) << prices[i] <<endl;
             }
 
             cout << "===========================" <<endl;
 
-            cout<< "Total $: " << fixed <<setprecision(2) << finalPrice <<endl;
+            cout<< "Total $" << fixed <<setprecision(2) << finalPrice <<endl;
 
             cout << "===========================" <<endl;
-
-
         }
 
 };
@@ -175,8 +175,11 @@ int main(){
     addonMenu.add(Addon("Custard Pudding", 0.80));
     addonMenu.add(Addon("Crystal Boba", 1.00));
     addonMenu.add(Addon("Lychee Popping Boba", 1.00));
-
+    
+    //Start output in the terminal
+    cout << "===============================================" <<endl;
     cout << "Welcome to the Boba Cafe! Make Your Boba Order!" << endl;
+    cout << "===============================================" <<endl;
     //print the singly linked lists of Boba menu
     printBobaMenu(bobaMenu);
     cout << endl;

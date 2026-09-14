@@ -72,10 +72,7 @@ public:
 
             //move on to the next one if not found yet
             current = current -> next;
-
-
         }
-
         return nullptr;// Item was not found
     }
 };
