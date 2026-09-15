@@ -86,42 +86,34 @@ void printAddonMenu(const CircularLinkedList<Addon> & addonMenu) {
 
 class UserReceipt{
     private:
-    string itemName;
-    double price;
-
+        string itemName;
+        double price;
     public:
+        //constructor
+        UserReceipt(string userItem, double userPrice){
+            itemName = userItem;
+            price = userPrice;
+        }
 
-    //constructor
-    UserReceipt(string userItem, double userPrice){
-        itemName = userItem;
-        price = userPrice;
-    }
-
-    void display(){
-        cout << std::left << setw(20) << itemName << " $" << fixed <<setprecision(2) << price <<endl;
-    }
+        void display(){
+            cout << std::left << setw(20) << itemName << " $" << fixed <<setprecision(2) << price <<endl;
+        }
 };
 
 
 //Order class: this is used to store what the user orders so that the final reciept can be printed out
 class Order{
     private:
-
         //this will be the users receipt (receipt is a linkedlist)
         LinkedList<UserReceipt> receipt;
-
-
         //this will store the final price of the users drink after modifications are added
         double finalPrice;
 
-
     public: 
-
         //Constructor
         Order(){
             finalPrice = 0.0;
         }
-
 
         //This method is to ask the user for the drink name and add to their receipt and the price to finalPrice
         void addDrink(const LinkedList<BobaDrink> & bobaMenu){
@@ -132,8 +124,6 @@ class Order{
             cout << "Enter the name of your drink: ";
 
             getline(cin, bobaName);
-
-
 
             //Check that the user entered the correct name for their drink
             Node <BobaDrink>* drink = bobaMenu.findByName(bobaName);
@@ -186,7 +176,6 @@ class Order{
                 if(answer == "no") {
                     break;
                 }
-                
 
                 cout<<"Enter an add-on: "; // Ask user to eneter add-on name
                 getline(cin, addonName);
@@ -216,13 +205,9 @@ class Order{
         void printReceipt() const{
             cout << endl;
             cout << "========= RECIEPT =========" <<endl;
-
             receipt.display();
-
             cout << "===========================" <<endl;
-
             cout<< "Total $" << fixed <<setprecision(2) << finalPrice <<endl;
-
             cout << "===========================" <<endl;
         }
 
@@ -233,7 +218,6 @@ class Order{
 int main(){
     // Create normal singly linked list
     LinkedList<BobaDrink> bobaMenu;
-
 
     // Add Boba drinks to the singly linked list
     bobaMenu.add(BobaDrink("Milk Tea", 5.00));
@@ -257,8 +241,6 @@ int main(){
     cout << "===============================================" <<endl;
     cout << "Welcome to the Boba Cafe! Make Your Boba Order!" << endl;
     cout << "===============================================" <<endl;
-
-
 
     //print the singly linked lists of Boba menu
     printBobaMenu(bobaMenu);

@@ -63,7 +63,7 @@ public:
     void display() const {
         // Check for empty list
         if (isEmpty()) {
-            cout << "List is empty." << endl;
+            cout << "There is no add-ons menu." << endl;
             return;
         }
         Node<T>* current = head;
@@ -84,8 +84,7 @@ public:
         Node<T>* current = head;
         //Traverse the circular list
         do {
-
-            //Save both values in a string to be converted to lowercase as case doesnt matter but spelling does 
+            //Save both values in a string to be converted to lowercase as case doesn't matter but spelling does 
             string modMenu = current -> data.getName();
             string userInputName = name;
 
@@ -96,13 +95,10 @@ public:
                 c = tolower(c);
             }
 
-
             // Compare current item's name
             if (modMenu == userInputName) {
                 return current;
             }
-
-
             current = current->next;
         } while (current != head);
         return nullptr;// Item was not found
@@ -120,8 +116,19 @@ public:
         Node<T>* previous = tail;
 
         do {
+            //Save both values in a string to be converted to lowercase as case doesnt matter but spelling does 
+            string modMenu = current -> data.getName();
+            string userInputName = name;
+
+            for(char &c : modMenu){
+                c = tolower(c);
+            }
+            for(char &c : userInputName){
+                c = tolower(c);
+            }
+
             // Check if current node is the item
-            if (current->data.getName() == name) {
+            if (modMenu == userInputName) {
                 // Only one node exists
                 if (current == head && current == tail) {
                     head = nullptr;
